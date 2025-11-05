@@ -1,0 +1,140 @@
+<mat-card class="user-card">
+  <!--Header-->
+  <mat-card-header class="user-header flex justify-between items-center">
+    <mat-card-title>
+      Users
+      <span *ngIf="activeFilter !== 'all'">
+        ({{ activeFilter === 'true' ? 'Active Only' : 'Inactive Only' }})
+      </span>
+    </mat-card-title>
+
+    <div class="header-actions flex items-center gap-4">
+      <!-- Active Filter Dropdown -->
+      <mat-form-field appearance="outline" class="filter-field w-40">
+        <mat-label>Filter</mat-label>
+        <mat-select [(value)]="activeFilter" (selectionChange)="loadUsers()">
+          <mat-option value="all">All</mat-option>
+          <mat-option value="true">Active</mat-option>
+          <mat-option value="false">Inactive</mat-option>
+        </mat-select>
+      </mat-form-field>
+
+      <button mat-raised-button color="primary" (click)="addNewUser()">
+        <mat-icon>add</mat-icon>
+        Add User
+      </button>
+    </div>
+  </mat-card-header>
+
+  <!--Table-->
+  <mat-card-content class="p-4">
+    <table mat-table [dataSource]="users" class="mat-elevation-z2 w-full">
+      <!-- Username -->
+      <ng-container matColumnDef="username">
+        <th mat-header-cell *matHeaderCellDef>Username</th>
+        <td mat-cell *matCellDef="let u">{{ u.username }}</td>
+      </ng-container>
+
+      <!-- Email -->
+      <ng-container matColumnDef="email_address">
+        <th mat-header-cell *matHeaderCellDef>Email</th>
+        <td mat-cell *matCellDef="let u">{{ u.email_address }}</td>
+      </ng-container>
+
+      <!-- Full Name -->
+      <ng-container matColumnDef="full_name">
+        <th mat-header-cell *matHeaderCellDef>Full Name</th>
+        <td mat-cell *matCellDef="let u">{{ u.last_name + ', ' + u.first_name }}</td>
+      </ng-container>
+
+      <!-- Title -->
+      <ng-container matColumnDef="title">
+        <th mat-header-cell *matHeaderCellDef>Title</th>
+        <td mat-cell *matCellDef="let u">{{ u.title }}</td>
+      </ng-container>
+
+      <!-- Security Level  -->
+      <ng-container matColumnDef="security_level">
+        <th mat-header-cell *matHeaderCellDef>Security Level</th>
+        <td mat-cell *matCellDef="let u">{{ u.security_level }}</td>
+      </ng-container>
+
+      <!-- Avatar -->
+      <ng-container matColumnDef="avatar">
+        <th mat-header-cell *matHeaderCellDef>Avatar</th>
+        <td mat-cell *matCellDef="let u">
+          <img
+            [src]="resourceURL + u.avatar"
+            alt="{{ u.first_name }} {{ u.last_name }}"
+            class="user-avatar"
+          />
+        </td>
+      </ng-container>
+
+      <!-- Actions -->
+      <ng-container matColumnDef="actions">
+        <th mat-header-cell *matHeaderCellDef>Actions</th>
+        <td mat-cell *matCellDef="let u">
+          <button mat-icon-button color="accent" (click)="openDetails(u)">
+            <mat-icon>info</mat-icon>
+          </button>
+        </td>
+      </ng-container>
+
+      <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+      <tr mat-row *matRowDef="let row; columns: displayedColumns"></tr>
+    </table>
+
+    <!-- Empty state -->
+    <div *ngIf="!users?.length && !loading" class="text-center py-6 text-gray-500">
+      No users found.
+    </div>
+
+    <!-- Loading -->
+    <div *ngIf="loading" class="flex justify-center py-6">
+      <mat-progress-spinner diameter="30" mode="indeterminate"></mat-progress-spinner>
+    </div>
+  </mat-card-content>
+
+  <!-- FOOTER -->
+  <mat-card-actions
+    class="user-footer flex justify-between items-center flex-wrap p-4 border-t border-gray-200"
+  >
+    <div class="mb-2 mb-md-0 flex items-center gap-2">
+      <span>Page Size:</span>
+      <mat-form-field appearance="outline" class="w-24">
+        <mat-select [formControl]="pageSizeControl">
+          <mat-option *ngFor="let size of [5, 10, 25, 50]" [value]="size">
+            {{ size }}
+          </mat-option>
+        </mat-select>
+      </mat-form-field>
+    </div>
+
+    <div class="text-center flex-grow mb-2 mb-md-0">
+      Showing {{ (page - 1) * pageSize + 1 }}
+      –
+      {{ Math.min(page * pageSize, total) }}
+      of {{ total }}
+    </div>
+
+    <div class="flex items-center gap-2">
+      <button
+        mat-stroked-button
+        color="primary"
+        [disabled]="page === 1"
+        (click)="pageChanged(page - 1)"
+      >
+        Previous
+      </button>
+      <button
+        mat-stroked-button
+        color="primary"
+        [disabled]="page >= Math.ceil(total / pageSize)"
+        (click)="pageChanged(page + 1)"
+      >
+        Next
+      </button>
+    </div>
+  </mat-card-actions>
+</mat-card>

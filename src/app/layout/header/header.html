@@ -1,0 +1,115 @@
+<mat-toolbar color="primary" class="app-toolbar">
+  <button mat-icon-button (click)="sidenavToggle()">
+    <mat-icon>menu</mat-icon>
+  </button>
+  <span>PolybiusCC - {{_userSession?.first_name }}</span>
+  <!-- Spacer pushes next items to the right -->
+  <span class="spacer"></span>
+
+  <div class="right-icons">
+  <!-- Phone Controls Dropdown -->
+  <button mat-icon-button [matMenuTriggerFor]="phoneMenu" aria-label="Open phone controls">
+    <mat-icon>{{ getPhoneIconName() }}</mat-icon>
+  </button>
+
+  <mat-menu #phoneMenu="matMenu" xPosition="before" yPosition="below">
+    <h3 mat-subheader>Phone Controls</h3>
+    <button mat-menu-item (click)="openDialpad()">
+      <mat-icon>dialpad</mat-icon>
+      <span>Dialpad</span>
+    </button>
+
+    <mat-divider></mat-divider>
+    <h3 mat-subheader>Status</h3>
+    <button
+      mat-menu-item
+      *ngFor="let status of agentStatuses"
+      [disabled]="selectedStatus === status"
+      (click)="setAgentStatus(status)"
+    >
+      <mat-icon>circle</mat-icon>
+      <span>{{ status }}</span>
+    </button>
+
+    <mat-divider></mat-divider>
+    <button mat-menu-item [disabled]="!isRinging || answeredCall" (click)="answerCall()">
+      <mat-icon>call</mat-icon>
+      <span>Answer</span>
+    </button>
+    <button mat-menu-item [disabled]="!answeredCall" (click)="transferCall()">
+      <mat-icon>call_split</mat-icon>
+      <span>Transfer</span>
+    </button>
+    <button mat-menu-item [disabled]="!answeredCall" (click)="hangupCall()">
+      <mat-icon>call_end</mat-icon>
+      <span>Hangup</span>
+    </button>
+  </mat-menu>
+
+  <!-- Additional icons -->
+  <button mat-icon-button>
+    <mat-icon>list</mat-icon>
+  </button>
+  <button mat-icon-button>
+    <mat-icon>mail</mat-icon>
+  </button>
+
+  <!-- Theme Picker Dropdown -->
+<button mat-icon-button [matMenuTriggerFor]="themeMenu" aria-label="Open theme picker">
+  <mat-icon>dark_mode</mat-icon>
+</button>
+
+<mat-menu #themeMenu="matMenu" xPosition="before">
+  <button
+    mat-menu-item
+    *ngFor="let mode of colorModes"
+    (click)="setColorMode(mode.name)"
+    [disabled]="currentMode() === mode.name"
+  >
+    <mat-icon>{{ mode.icon }}</mat-icon>
+    <span>{{ mode.text }}</span>
+  </button>
+</mat-menu>
+
+
+  <!-- User Menu Dropdown -->
+  <button mat-icon-button [matMenuTriggerFor]="userMenu" aria-label="Open user menu">
+    <img
+      [src]="resourceURL + (_userSession?.avatar || 'default-avatar.png')"
+      class="user-avatar"
+      alt="User avatar"
+    />
+  </button>
+
+  <mat-menu #userMenu="matMenu" xPosition="before">
+    <h3 mat-subheader>Account</h3>
+    <button mat-menu-item>
+      <mat-icon>notifications</mat-icon>
+      <span>Updates</span>
+      <span class="mat-badge info">42</span>
+    </button>
+
+    <button mat-menu-item routerLink="/apps/email/inbox">
+      <mat-icon>mail</mat-icon>
+      <span>Messages</span>
+      <span class="mat-badge success">42</span>
+    </button>
+
+    <mat-divider></mat-divider>
+
+    <h3 mat-subheader>Settings</h3>
+    <button mat-menu-item routerLink="/profile">
+      <mat-icon>person</mat-icon>
+      <span>Profile</span>
+    </button>
+    <button mat-menu-item routerLink="/settings">
+      <mat-icon>settings</mat-icon>
+      <span>Settings</span>
+    </button>
+    <button mat-menu-item (click)="signOut()">
+      <mat-icon>logout</mat-icon>
+      <span>Logout</span>
+    </button>
+  </mat-menu>
+  </div>
+</mat-toolbar>

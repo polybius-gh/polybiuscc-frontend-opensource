@@ -1,0 +1,19 @@
+.login-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100vh;
+
+  mat-card-header {
+    margin-bottom: 16px;
+  }
+
+  mat-card {
+    width: 400px;
+    padding: 24px;
+  }
+
+  login-submit {
+    margin-top: 16px;
+  }
+}

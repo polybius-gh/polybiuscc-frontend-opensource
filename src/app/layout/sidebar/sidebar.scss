@@ -1,0 +1,11 @@
+:host {
+  display: flex;
+  flex-direction: column;
+  width: 100%;                   // fill parent mat-sidenav width
+  padding: 16px;                 // internal padding
+  background-color: var(--mat-sys-surface-container);
+  color: var(--mat-sys-on-surface-variant);
+  box-sizing: border-box;        // ensure padding does not overflow
+  height: 100%;                  // fill mat-sidenav height
+  overflow: hidden;              // prevent internal scrolling
+}

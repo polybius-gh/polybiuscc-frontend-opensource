@@ -1,0 +1,8 @@
+{
+  "/api": {
+    "target": "https://server-dev.polybiusllc.com:4400",
+    "secure": false,
+    "changeOrigin": true,
+    "logLevel": "debug"
+  }
+}

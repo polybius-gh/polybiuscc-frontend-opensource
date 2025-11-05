@@ -1,0 +1,123 @@
+:host {
+  display: block;
+  padding: 1rem;
+
+  .customer-card {
+    width: 100%;
+    overflow-x: auto;
+  }
+
+  /* Header */
+  .customer-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 1rem 1.25rem;
+    border-bottom: 2px solid #2196f3;
+  }
+
+  .header-actions {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+  }
+
+  .filter-field {
+    min-width: 150px;
+  }
+
+  /* Table */
+  .table-container {
+    padding: 0;
+  }
+
+  table {
+    width: 100%;
+    border-collapse: collapse;
+
+    th, td {
+      padding: 0.5rem 0.75rem;
+      white-space: nowrap;
+    }
+
+    th {
+      background-color: #f8f9fa;
+      font-weight: 600;
+      border-bottom: 1px solid #e0e0e0;
+    }
+
+    tr.mat-row:hover {
+      background-color: #f1f3f5;
+    }
+
+    .highlight {
+      background-color: #e3f2fd;
+      transition: background-color 0.3s ease;
+    }
+  }
+
+  /* Expanded Row */
+  .expanded-row td {
+    background: #fafafa;
+    padding: 0.75rem;
+  }
+
+  .expanded-section {
+    background: #fff;
+    border: 1px solid #e0e0e0;
+    border-radius: 8px;
+    padding: 1rem;
+    box-shadow: 0 1px 4px rgba(0, 0, 0, 0.08);
+  }
+
+  .form-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+    gap: 1rem;
+    margin-bottom: 1rem;
+  }
+
+  .inner-table {
+    width: 100%;
+    margin-bottom: 0.5rem;
+
+    th, td {
+      padding: 0.4rem 0.5rem;
+      font-size: 0.9rem;
+    }
+  }
+
+  .save-actions {
+    display: flex;
+    justify-content: flex-end;
+    gap: 0.75rem;
+    margin-top: 1rem;
+  }
+
+  /* Footer */
+  .customer-footer {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    flex-wrap: wrap;
+    padding: 0.75rem 1.25rem;
+    border-top: 2px solid #2196f3;
+    background-color: #fafafa;
+  }
+
+  .footer-left,
+  .footer-right {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+  }
+
+  .footer-center {
+    text-align: center;
+    flex-grow: 1;
+  }
+
+  .page-size-field {
+    width: 80px;
+  }
+}

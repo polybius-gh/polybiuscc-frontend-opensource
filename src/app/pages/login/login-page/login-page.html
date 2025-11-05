@@ -1,0 +1,61 @@
+<div class="login-container">
+<div
+  class="min-vh-100 d-flex flex-column justify-content-center align-items-center bg-light"
+>
+  <div class="mat-card-container" style="max-width: 500px; width: 100%;">
+    <mat-card>
+      <mat-card-header>
+        <mat-card-title>Sign in to your account</mat-card-title>
+      </mat-card-header>
+
+      <mat-card-content>
+        <form [formGroup]="signInForm" (ngSubmit)="signIn()" autocomplete="off">
+          <!-- Hidden dummy inputs to prevent autofill -->
+          <input type="text" style="display: none" autocomplete="username" />
+          <input type="password" style="display: none" autocomplete="current-password" />
+
+          <!-- Error message -->
+          <div *ngIf="authError" class="mat-error mb-3">
+            {{ authError }}
+          </div>
+
+          <!-- Username -->
+          <mat-form-field appearance="outline" class="w-100 mb-3">
+            <mat-label>Username</mat-label>
+            <mat-icon matPrefix>person</mat-icon>
+            <input matInput formControlName="username" autocomplete="off" />
+            <mat-error *ngIf="username?.invalid && username?.touched">
+              Username is required
+            </mat-error>
+          </mat-form-field>
+
+          <!-- Password -->
+          <mat-form-field appearance="outline" class="w-100 mb-4">
+            <mat-label>Password</mat-label>
+            <mat-icon matPrefix>lock</mat-icon>
+            <input matInput type="password" formControlName="password" autocomplete="new-password" />
+            <mat-error *ngIf="password?.invalid && password?.touched">
+              Password is required
+            </mat-error>
+          </mat-form-field>
+
+          <div class="d-flex justify-content-between align-items-center mb-3">
+            <!-- Remember me -->
+            <mat-checkbox formControlName="rememberMe">Remember Me</mat-checkbox>
+
+            <!-- Forgot password -->
+            <button mat-button type="button">Forgot password?</button>
+          </div>
+
+          <div class="text-center" class="login-submit">
+            <button mat-raised-button color="primary" type="submit" [disabled]="signInForm.invalid">
+              Login
+            </button>
+          </div>
+        </form>
+      </mat-card-content>
+    </mat-card>
+  </div>
+</div>
+</div>
+
