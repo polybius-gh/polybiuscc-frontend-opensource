@@ -1,8 +1,9 @@
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 //import { catchError, Observable, of, switchMap, throwError } from 'rxjs';
-import { UserService } from '../user/user.service';
+//import { UserService } from '../user/user.service';
 import { Socket } from 'ngx-socket-io';
+import { CallDataService } from '../callData/calldata.service';
 
 @Injectable({
   providedIn: 'root',
@@ -15,11 +16,14 @@ export class SocketService {
    */
   constructor(
     private _httpClient: HttpClient,
-    private _userService: UserService,
+    //private _userService: UserService,
+    private _callDataService: CallDataService,
     private _socket: Socket
   ) {
-    _socket.on('connect', () => {
+    _socket.on('connect',  () => {
       console.log('socket service connected:', _socket.id);
+      //initializing listeners
+      this._callDataService.initializeListeners();
     });
 
     this._socket.fromEvent('testping').subscribe((e) => {

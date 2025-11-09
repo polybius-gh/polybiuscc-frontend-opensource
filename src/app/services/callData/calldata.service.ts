@@ -7,6 +7,9 @@ export class CallDataService {
   private listenersInitialized = false;
   private subscriptions: Subscription[] = [];
 
+   callCount$ = new BehaviorSubject<number>(0);
+   liveUserCount$ = new BehaviorSubject<number>(0);
+
   constructor(private _socket: Socket) {
     // Auto teardown on socket disconnect
     this._socket.on('disconnect', () => {
@@ -26,7 +29,7 @@ export class CallDataService {
     );
 
     this.subscriptions.push(
-      this._socket.fromEvent('sendTeamData').subscribe(data => this.updateTeamData(data))
+      this._socket.fromEvent('sendLiveUserCount').subscribe(data => this.updateLiveUserCount(data))
     );
 
   }
@@ -37,14 +40,15 @@ export class CallDataService {
     this.listenersInitialized = false;
   }
 
-  callCount$ = new BehaviorSubject<number>(0);
+ 
 
   private updateCallCount(data: any) {
     this.callCount$.next(data);
     console.log('callCount:', this.callCount$);
   }
 
-  private updateTeamData(data: any) {
-    console.log('Team data received:', data);
+  private updateLiveUserCount(data: any) {
+    this.liveUserCount$.next(data);
+    console.log('User Count received:', data);
   }
 }

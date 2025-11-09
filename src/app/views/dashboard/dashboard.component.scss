@@ -1,0 +1,13 @@
+.dashboard-container {
+  padding: 16px;
+}
+
+.dashboard-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+  gap: 16px;
+}
+
+.dashboard-card {
+  min-height: 150px;
+}

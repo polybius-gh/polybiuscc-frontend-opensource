@@ -20,6 +20,7 @@ export class UserSessionService {
   // Accessors
   // --------------------------------------------------------------------------
   set userSession(value: UserSession | null) {
+    console.log('setting userSession')
     this._userSession.next(value);
   }
 
@@ -33,16 +34,6 @@ export class UserSessionService {
   get userSession(): UserSession | null {
     return this._userSession.getValue();
   }
-
-  // loadUserSession(sessionID:  string) {
-  //   console.log('loading user session...', sessionID);
-  //   return this._httpClient.get<UserSession>(`${environment.apiBaseUrl}/users/getUserSession`,
-  //     {
-  //       params: { sessionID },
-  //       //withCredentials: true
-  //     }
-  //   )
-  // }
 
   loadUserSession(sessionID: string): Observable<UserSession> {
   console.log('loading user session...', sessionID);
@@ -65,8 +56,6 @@ export class UserSessionService {
     })
   );
 }
-
-
     /**
    * Update one or more properties of the current userSession safely.
    * Example: this.userService.updateCurrentUser({ socket_id: 'abc123' });

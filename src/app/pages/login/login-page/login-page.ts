@@ -44,6 +44,7 @@ export class LoginPage {
   ) {}
 
     ngOnInit(): void {
+      console.log('loading login page');
     // Create the form
     this.signInForm = new FormGroup({
       username: new FormControl('', Validators.required),

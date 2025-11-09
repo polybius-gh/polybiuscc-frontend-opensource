@@ -23,8 +23,9 @@ export class NoAuthGuard implements CanActivate {
 
   // noAuth.guard.ts
 canActivate(): Observable<boolean | UrlTree> {
-  return this._authService.checkSession().pipe(
-    map((user) => (user ? this._router.createUrlTree(['/dashboard']) : true))
+  console.log('no auth guard running...')
+  return this._authService.checkUserSession().pipe(
+    map((userSession) => (userSession ? this._router.createUrlTree(['/dashboard']) : true))
   );
 }
 
