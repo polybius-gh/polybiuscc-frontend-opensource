@@ -48,3 +48,19 @@ export interface Customer
     phones?: Phone[];
     notes?: Note[]; 
 }
+
+export interface NewCustomer
+{
+    id: string;
+    name: string;
+    company_name: string;
+    email_address: string;
+    active: boolean;
+    address_line_1: string;
+    address_line_2?: string;
+    city: string;
+    state: string;
+    postal_code: string;
+    country: string;
+    phone_number: string;
+}

@@ -1,0 +1,128 @@
+<h2 mat-dialog-title>{{ isEditMode ? 'Edit User' : 'Add User' }}</h2>
+
+<mat-dialog-content>
+  <mat-card class="user-card">
+    <form [formGroup]="form" class="user-form">
+      <div class="grid-layout">
+        <!-- LEFT COLUMN: Avatar -->
+        <div class="left-col">
+          <div class="avatar-wrapper">
+            <img *ngIf="avatarPreview" [src]="avatarPreview" alt="Avatar" class="avatar" />
+
+            <button mat-stroked-button color="primary" class="upload-btn">
+              <input type="file" (change)="onAvatarSelected($event)" accept="image/*" />
+              Change Avatar
+            </button>
+          </div>
+        </div>
+
+        <!-- RIGHT COLUMN: User Fields -->
+        <div class="right-col">
+          <div class="form-grid">
+            <!-- ROW 1 -->
+            <mat-form-field appearance="fill">
+              <mat-label>Username</mat-label>
+              <input matInput formControlName="username" />
+              <mat-error *ngIf="form.get('username')?.hasError('required')">
+                Username is required.
+              </mat-error>
+              <mat-error *ngIf="form.get('username')?.hasError('usernameTaken')">
+                Username is already taken
+              </mat-error>
+              <!-- Loading indicator while async validator is running -->
+              <mat-icon *ngIf="form.get('username')?.pending">hourglass_empty</mat-icon>
+
+              <!-- Checkmark when available -->
+              <mat-icon  matSuffix *ngIf="form.get('username')?.valid && !form.get('username')?.pending && !this.isEditMode">
+                check_circle
+              </mat-icon>
+            </mat-form-field>
+
+            <mat-form-field appearance="fill">
+              <mat-label>Email Address</mat-label>
+              <input matInput formControlName="email_address" />
+              <mat-error *ngIf="form.get('email_address')?.hasError('required')">
+                Email is required.
+              </mat-error>
+              <mat-error *ngIf="form.get('email_address')?.hasError('email')">
+                Please enter a valid email address.
+              </mat-error>
+            </mat-form-field>
+
+            <!-- ROW 2 -->
+            <mat-form-field appearance="fill">
+              <mat-label>First Name</mat-label>
+              <input matInput formControlName="first_name" />
+              <mat-error *ngIf="form.get('first_name')?.hasError('required')">
+                First name is required.
+              </mat-error>
+            </mat-form-field>
+
+            <mat-form-field appearance="fill">
+              <mat-label>Last Name</mat-label>
+              <input matInput formControlName="last_name" />
+              <mat-error *ngIf="form.get('last_name')?.hasError('required')">
+                Last name is required.
+              </mat-error>
+            </mat-form-field>
+
+            <!-- ROW 3 -->
+            <mat-form-field appearance="fill">
+              <mat-label>Title</mat-label>
+              <input matInput formControlName="title" />
+            </mat-form-field>
+
+            <mat-form-field appearance="fill">
+              <mat-label>Security Level</mat-label>
+              <mat-select formControlName="security_level">
+                <mat-option value="user">User</mat-option>
+                <mat-option value="admin">Admin</mat-option>
+                <mat-option value="supervisor">Supervisor</mat-option>
+              </mat-select>
+              <mat-error *ngIf="form.get('security_level')?.hasError('required')">
+                Security level is required.
+              </mat-error>
+            </mat-form-field>
+          </div>
+
+          <div class="checkbox-row">
+            <mat-checkbox formControlName="active">Active</mat-checkbox>
+            <mat-checkbox formControlName="sip_enabled">SIP Enabled</mat-checkbox>
+          </div>
+
+          <!-- SIP INFO SECTION -->
+          <mat-divider class="sip-divider" *ngIf="form.value.sip_enabled"></mat-divider>
+
+          <div *ngIf="form.value.sip_enabled && form.value.sipData" class="sip-section">
+            <div class="sip-grid">
+              <div class="sip-field">
+                <p><strong>Extension:</strong></p>
+                <p>{{ form.value.sipData.extension }}</p>
+              </div>
+              <div class="sip-field">
+                <p><strong>SIP Server:</strong></p>
+                <p>{{ form.value.sipData.sip_server }}</p>
+              </div>
+              <!-- Optional: Uncomment if you want to display password -->
+              <!--
+    <div class="sip-field">
+      <p><strong>Password:</strong></p>
+      <p>{{ form.value.sipData.sip_password }}</p>
+    </div>
+    -->
+            </div>
+          </div>
+        </div>
+      </div>
+    </form>
+  </mat-card>
+</mat-dialog-content>
+
+<mat-dialog-actions align="end">
+  <button mat-button (click)="close()">Cancel</button>
+  <button mat-raised-button color="primary" 
+                            (click)="save()"
+                            [disabled]="form.invalid || form.get('username')?.pending">
+                            Save
+  </button>
+</mat-dialog-actions>

@@ -44,11 +44,11 @@ export class CallDataService {
 
   private updateCallCount(data: any) {
     this.callCount$.next(data);
-    console.log('callCount:', this.callCount$);
+    //console.log('callCount:', this.callCount$);
   }
 
   private updateLiveUserCount(data: any) {
     this.liveUserCount$.next(data);
-    console.log('User Count received:', data);
+    //console.log('User Count received:', data);
   }
 }

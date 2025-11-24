@@ -3,7 +3,7 @@ import { CanActivate, Router, UrlTree } from '@angular/router';
 import { Observable, of } from 'rxjs';
 import { map } from 'rxjs/operators';
 import { AuthService } from '../auth/auth.service';
-import { User } from '../user/user.types';
+import { User } from '../user/user.type';
 
 @Injectable({ providedIn: 'root' })
 export class NoAuthGuard implements CanActivate {

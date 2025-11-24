@@ -1,0 +1,152 @@
+.user-card {
+  padding: 16px;
+}
+
+
+.user-form {
+  width: 100%;
+}
+
+/* USER INFO CARD */
+.user-info-card {
+  padding: 16px;
+  background: var(--mat-sys-surface-container-high);
+  border-radius: 8px;
+  border: 1px solid var(--mat-sys-outline-variant);
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.grid-layout {
+  display: grid;
+  grid-template-columns: 200px 1fr;
+  gap: 24px;
+
+  @media (max-width: 700px) {
+    grid-template-columns: 1fr;
+  }
+}
+
+/* LEFT COLUMN */
+.left-col {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.avatar-wrapper {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 12px;
+  width: 100%;
+}
+
+.avatar {
+  width: 140px;
+  height: 140px;
+  border-radius: 50%;
+  object-fit: cover;
+  border: 2px solid var(--mat-sys-outline-variant);
+}
+
+.upload-btn {
+  width: 100%;
+  position: relative;
+  overflow: hidden;
+
+  input[type="file"] {
+    position: absolute;
+    opacity: 0;
+    inset: 0;
+    cursor: pointer;
+  }
+}
+
+/* RIGHT COLUMN */
+.right-col {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.form-grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 16px;
+
+  @media (max-width: 700px) {
+    grid-template-columns: 1fr;
+  }
+}
+
+
+.checkbox-row {
+  display: flex;
+  gap: 24px;
+}
+
+/* SIP SECTION */
+.sip-divider {
+  margin-top: 8px;
+}
+
+.sip-section {
+  padding: 12px;
+  background: var(--mat-sys-surface-container);
+  border-radius: 8px;
+  border: 1px solid var(--mat-sys-outline-variant);
+  font-size: 0.9rem;
+
+  .sip-grid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 16px;
+
+    @media (max-width: 500px) {
+      grid-template-columns: 1fr;
+    }
+  }
+
+  .sip-field {
+    p {
+      margin: 4px 0;
+    }
+
+    strong {
+      display: block;
+      margin-bottom: 4px;
+      color: var(--mat-sys-on-surface-variant);
+    }
+  }
+}
+
+/* VALIDATION MESSAGES */
+mat-error {
+  font-size: 0.8rem;
+  margin-top: 4px;
+  color: var(--mat-sys-error);
+  line-height: 1.2;
+}
+
+/* Optional: Slightly adjust spacing for fields with errors */
+mat-form-field.ng-invalid.ng-touched {
+  --mat-form-field-outline-color: var(--mat-sys-error);
+}
+
+/* Optional: Make invalid inputs stand out slightly */
+input.ng-invalid.ng-touched,
+mat-select.ng-invalid.ng-touched {
+  border-bottom: 2px solid var(--mat-sys-error);
+}
+
+/* Helps maintain spacing consistency under form fields */
+.mat-mdc-form-field-subscript-wrapper {
+  min-height: 20px;
+}
+
+mat-icon[matSuffix] {
+  color: green;
+  margin-right: 4px;
+}

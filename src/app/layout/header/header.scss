@@ -1,61 +1,328 @@
+// :host {
+//   display: block;
+//   background-color: var(--mat-sys-primary);
+//   color: var(--mat-sys-on-primary);
+//   padding: 0; // remove padding from host so borders run full width
+
+//   // .app-toolbar {
+//   //   display: flex;
+//   //   align-items: center;
+//   //   justify-content: space-between;
+
+//   //   background-color: var(--mat-sys-primary);
+//   //   color: var(--mat-sys-on-primary);
+
+//   //   min-height: 120px; // taller toolbar
+//   //   border-top: 2px solid var(--mat-sys-outline-variant);
+//   //   border-bottom: 2px solid var(--mat-sys-outline-variant);
+//   //   box-shadow: 0 1px 2px rgba(0, 0, 0, 0.15);
+//   //   padding: 0 16px; // internal padding
+
+//   //   font: var(--mat-sys-title-large);
+
+//   //   .app-title {
+//   //     font: var(--mat-sys-title-large);
+//   //     margin-left: 8px;
+//   //   }
+
+//   //   .spacer {
+//   //     flex: 1 1 auto;
+//   //   }
+
+//   //   // Session Paused Message
+//   //   .session-paused {
+//   //     display: flex;
+//   //     align-items: center;
+//   //     gap: 10px;
+//   //     color: #000000; // BLACK text for visibility
+//   //     font-weight: 500;
+//   //     margin-right: 20px;
+//   //     animation: blink 2s step-start infinite;
+
+//   //     .paused-text {
+//   //       text-transform: none;
+//   //     }
+
+//   //     .paused-time {
+//   //       opacity: 0.8;
+//   //     }
+//   //   }
+
+//   //   // Right-hand icons container
+//   //   .right-icons {
+//   //     display: flex;
+//   //     align-items: center;
+//   //     gap: 8px;         // space between each icon
+//   //     padding-right: 16px; // space from the edge
+//   //   }
+
+//   //   .user-avatar {
+//   //     width: 48px;
+//   //     height: 48px;
+//   //     border-radius: 4px;
+//   //     object-fit: cover;
+//   //   }
+
+//   //   .mat-icon-button {
+//   //     width: 48px;
+//   //     height: 48px;
+//   //   }
+
+//   //   .mat-badge {
+//   //     margin-left: auto;
+//   //     font-size: 0.75rem;
+//   //     background: var(--mat-sys-secondary);
+//   //     color: var(--mat-sys-on-secondary);
+//   //     border-radius: 8px;
+//   //     padding: 0 4px;
+//   //   }
+//   // }
+//   .app-toolbar {
+//   display: flex;
+//   flex-direction: column; // stack top and bottom sections
+//   justify-content: space-between;
+//   min-height: 120px;
+//   padding: 0 16px;
+
+//   .toolbar-top {
+//     display: flex;
+//     align-items: center;
+//     justify-content: space-between;
+//     flex: 3; // top 3/4
+//   }
+
+//   .toolbar-info {
+//     display: flex;
+//     align-items: center;
+//     justify-content: flex-start;
+//     gap: 16px;
+//     flex: 1; // bottom 1/4
+//     background-color: rgba(255, 255, 255, 0.08); // subtle contrast
+//     padding: 0 16px;
+//     font-size: 0.875rem;
+//     color: var(--mat-sys-on-primary);
+//   }
+
+//   .info-item {
+//     display: flex;
+//     align-items: center;
+//   }
+// }
+
+//   // Keyframes for blink effect
+//   @keyframes blink {
+//     50% {
+//       opacity: 0;
+//     }
+//   }
+// }
 :host {
   display: block;
   background-color: var(--mat-sys-primary);
   color: var(--mat-sys-on-primary);
-  padding: 0; // remove padding from host so borders run full width
+  padding: 0; // remove host padding so borders run full width
 
   .app-toolbar {
     display: flex;
-    align-items: center;
-    justify-content: space-between;
-
-    background-color: var(--mat-sys-primary);
-    color: var(--mat-sys-on-primary);
-
-    min-height: 120px; // taller toolbar
+    flex-direction: column; // stack top and bottom sections
+    width: 100%; // full browser width
+    min-height: 120px; // total toolbar height
+    box-sizing: border-box;
     border-top: 2px solid var(--mat-sys-outline-variant);
     border-bottom: 2px solid var(--mat-sys-outline-variant);
     box-shadow: 0 1px 2px rgba(0, 0, 0, 0.15);
-    padding: 0 16px; // internal padding
-
     font: var(--mat-sys-title-large);
+    padding: 0;
 
-    .app-title {
-      font: var(--mat-sys-title-large);
-      margin-left: 8px;
-    }
-
-    .spacer {
-      flex: 1 1 auto;
-    }
-
-    // Right-hand icons container
-    .right-icons {
+    // ----------------------
+    // Top 3/4: existing header
+    // ----------------------
+    .toolbar-top {
       display: flex;
       align-items: center;
-      gap: 8px;         // space between each icon
-      padding-right: 16px; // space from the edge
+      justify-content: space-between;
+      width: 100%;
+      padding: 0 16px;
+      flex: 3;
+
+      .app-title {
+        font: var(--mat-sys-title-large);
+        margin-left: 8px;
+      }
+
+      .spacer {
+        flex: 1 1 auto;
+      }
+
+      // Right-hand icons container
+      .right-icons {
+        display: flex;
+        align-items: center;
+        gap: 8px;
+        padding-right: 16px;
+
+        .mat-icon-button {
+          width: 48px;
+          height: 48px;
+        }
+
+        .user-avatar {
+          width: 48px;
+          height: 48px;
+          border-radius: 4px;
+          object-fit: cover;
+        }
+
+        .mat-badge {
+          margin-left: auto;
+          font-size: 0.75rem;
+          background: var(--mat-sys-secondary);
+          color: var(--mat-sys-on-secondary);
+          border-radius: 8px;
+          padding: 0 4px;
+        }
+      }
     }
 
-    .user-avatar {
-      width: 48px;
-      height: 48px;
-      border-radius: 4px;
-      object-fit: cover;
+    // ----------------------
+    // Bottom 1/4: info-bar
+    // ----------------------
+    .toolbar-info {
+      display: flex;
+      align-items: center;
+      justify-content: flex-start;
+      gap: 16px;
+      width: 100%;
+      padding: 8px 16px;
+      flex: 1;
+      background-color: var(--mat-sys-surface-container); // visible contrast
+      color: var(--mat-sys-on-surface);
+      font-size: 0.875rem;
+
+      .info-item {
+        display: flex;
+        align-items: center;
+      }
+
+      // Session Paused Message
+      .session-paused {
+        margin-left: auto; // push to right side
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        color: #000000;
+        font-weight: 500;
+       // margin-right: 20px;
+        animation: blink 2s step-start infinite;
+
+        .paused-text {
+          text-transform: none;
+        }
+
+        .paused-time {
+          opacity: 0.8;
+        }
+      }
+
+      .info-item {
+        display: flex;
+        align-items: center;
+      }
+    }
+  }
+
+  // ----------------------
+  // Keyframes for blinking paused message
+  // ----------------------
+  @keyframes blink {
+    50% {
+      opacity: 0;
+    }
+  }
+}
+
+/* Mobile tweaks */
+// @media (max-width: 599px) {
+//   .app-toolbar {
+//     min-height: auto; // allow flexible height
+//     flex-direction: column;
+
+//     .toolbar-top {
+//       flex-direction: row;
+//       align-items: center;
+//       padding: 0 8px;
+
+//       .right-icons {
+//         gap: 4px;
+
+//         .mat-icon-button,
+//         .user-avatar {
+//           width: 36px;
+//           height: 36px;
+//         }
+
+//         .mat-badge {
+//           font-size: 0.65rem;
+//         }
+//       }
+
+//       .session-paused {
+//         font-size: 0.75rem;
+//         gap: 6px;
+//       }
+//     }
+
+//     .toolbar-info {
+//       flex-direction: column;
+//       align-items: flex-start;
+//       gap: 4px;
+//       padding: 4px 8px;
+//       font-size: 0.75rem;
+//     }
+//   }
+// }
+@media (max-width: 599px) {
+  .toolbar-top {
+    flex-wrap: wrap;
+    gap: 4px;
+    justify-content: space-between;
+
+    span {
+      font-size: 0.65rem; // shrink text
+      max-width: 120px; // truncate long names
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
     }
 
-    .mat-icon-button {
-      width: 48px;
-      height: 48px;
+    .right-icons {
+      gap: 2px;
+      .mat-icon-button,
+      .user-avatar {
+        width: 32px;
+        height: 32px;
+      }
+      .mat-badge {
+        font-size: 0.6rem;
+      }
     }
 
-    .mat-badge {
-      margin-left: auto;
-      font-size: 0.75rem;
-      background: var(--mat-sys-secondary);
-      color: var(--mat-sys-on-secondary);
-      border-radius: 8px;
-      padding: 0 4px;
+    .session-paused {
+      font-size: 0.65rem;
+      gap: 2px;
     }
+  }
+
+  .toolbar-info {
+    flex-direction: row; // horizontal instead of column
+    flex-wrap: nowrap;
+    overflow-x: auto; // scroll if it overflows
+    gap: 8px;
+    padding: 4px 8px;
+    font-size: 0.65rem;
+
+    .info-item {
+      flex: 0 0 auto;
+    } // prevent wrapping
   }
 }

@@ -1,11 +1,73 @@
+// :host {
+//   display: flex;
+//   flex-direction: column;
+//   width: 100%;                   // fill parent mat-sidenav width
+//   padding: 16px;                 // internal padding
+//   background-color: var(--mat-sys-surface-container);
+//   color: var(--mat-sys-on-surface-variant);
+//   box-sizing: border-box;        // ensure padding does not overflow
+//   height: 100%;                  // fill mat-sidenav height
+//   overflow: hidden;              // prevent internal scrolling
+// }
+
+// @media (max-width: 599px) {
+//   :host {
+//     width: 200px;
+//     position: fixed;
+//     top: 56px;               // mobile header height
+//     height: calc(100vh - 56px);
+//     transform: translateX(-100%);
+//     box-shadow: 2px 0 6px rgba(0,0,0,0.25);
+//     transition: transform 0.3s ease;
+//     z-index: 1300;           // make sure it's above header & main-content
+
+//     &.open { transform: translateX(0); }
+//   }
+// }
+
 :host {
   display: flex;
   flex-direction: column;
-  width: 100%;                   // fill parent mat-sidenav width
-  padding: 16px;                 // internal padding
+  width: 100%;
+  padding: 16px;
   background-color: var(--mat-sys-surface-container);
   color: var(--mat-sys-on-surface-variant);
-  box-sizing: border-box;        // ensure padding does not overflow
-  height: 100%;                  // fill mat-sidenav height
-  overflow: hidden;              // prevent internal scrolling
+  box-sizing: border-box;
+  height: 100%;
+  overflow: hidden;
 }
+
+@media (max-width: 599px) {
+  :host {
+    width: 200px;
+    position: fixed;
+    top: 56px; // mobile header height
+    height: calc(100vh - 56px);
+    transform: translateX(-100%);
+    box-shadow: 2px 0 6px rgba(0, 0, 0, 0.25);
+    transition: transform 0.3s ease;
+    z-index: 1300;
+    pointer-events: none;
+
+    &.open {
+      transform: translateX(0);
+      pointer-events: auto;
+    }
+  }
+
+  .overlay {
+    display: none;
+
+    &.active {
+      display: block;
+      position: fixed;
+      top: 56px;
+      left: 0;
+      width: 100%;
+      height: calc(100vh - 56px);
+      background: rgba(0, 0, 0, 0.3);
+      z-index: 1200; // below sidebar
+    }
+  }
+}
+

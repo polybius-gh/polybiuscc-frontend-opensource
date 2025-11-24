@@ -2,15 +2,15 @@ import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { BehaviorSubject, Observable, of, throwError } from 'rxjs';
 import { catchError, map, tap, switchMap, take } from 'rxjs/operators';
-import { User } from './user.types';
-import { CurrentUser } from './currentUser.types';
+import { User } from './user.type';
+//import { CurrentUser } from './currentUser.type';
 
 
 @Injectable({
   providedIn: 'root',
 })
 export class UserService {
-  private _currentUser: BehaviorSubject<CurrentUser | null> = new BehaviorSubject<CurrentUser | null>(null);
+  //private _currentUser: BehaviorSubject<CurrentUser | null> = new BehaviorSubject<CurrentUser | null>(null);
   private _user: BehaviorSubject<User | null> = new BehaviorSubject<User | null>(null);
   private _users: BehaviorSubject<User[] | null> = new BehaviorSubject<User[] | null>(null);
 
@@ -21,20 +21,20 @@ export class UserService {
   // --------------------------------------------------------------------------
   // Accessors
   // --------------------------------------------------------------------------
-  set currentUser(value: CurrentUser | null) {
-    this._currentUser.next(value);
-  }
+  // set currentUser(value: CurrentUser | null) {
+  //   this._currentUser.next(value);
+  // }
 
-  get currentUser$(): Observable<CurrentUser | null> {
-    return this._currentUser.asObservable();
-  }
+  // get currentUser$(): Observable<CurrentUser | null> {
+  //   return this._currentUser.asObservable();
+  // }
 
   // --------------------------------------------------------------------------
   // Public methods
   // --------------------------------------------------------------------------
-  get currentUser(): CurrentUser | null {
-    return this._currentUser.getValue();
-  }
+  // get currentUser(): CurrentUser | null {
+  //   return this._currentUser.getValue();
+  // }
 
   getAllUsers(): Observable<User[]> {
     return this._httpClient.get<User[]>(`${this.baseURL}/getAllUsers`).pipe(
@@ -70,36 +70,32 @@ export class UserService {
   }
 
   createUser(data: any): Observable<User> {
-    return this.currentUser$.pipe(
-      take(1), // take the current value only
-      switchMap((creatingUser) => {
-        if (!creatingUser?.id) {
+
+        if (!data?.currentUserId) {
           return throwError(() => 'No current user ID found');
         }
 
-        const payload = { ...data, currentUserId: creatingUser.id };
+        const payload = { ...data, currentUserId: data.currentUserId.id };
 
         return this._httpClient
           .post<User>(`${this.baseURL}/createNewUser`, payload)
           .pipe(
             catchError((err) => throwError(() => err.error?.message || 'Failed to create user'))
           );
-      })
-    );
+
   }
 
   updateUser(userId: string, data: any): Observable<User> {
-    return this.currentUser$.pipe(
-      take(1), // take the current user once
-      switchMap((creatingUser) => {
-        if (!creatingUser?.id) {
+    
+    
+        if (!data.currentUserId) {
           return throwError(() => 'No current user ID found');
         }
 
         const payload = {
           ...data,
           id: userId,
-          currentUserId: creatingUser.id,
+          currentUserId: data.currentUserId,
         };
 
         return this._httpClient.post<User>(`${this.baseURL}/updateUser`, payload).pipe(
@@ -118,8 +114,8 @@ export class UserService {
             return throwError(() => messages);
           })
         );
-      })
-    );
+      
+    
   }
 
   assignSipExtension(userId: string): Observable<User> {
@@ -141,37 +137,43 @@ export class UserService {
    * @param userId - ID of the user to update
    * @param newActiveValue - new boolean active status
    */
-  toggleUserActive(input: any): Observable<User> {
-    return this.currentUser$.pipe(
-      take(1), // take the current user once
-      switchMap((creatingUser) => {
-        if (!creatingUser?.id) {
-          return throwError(() => 'No current user ID found');
-        }
+  // toggleUserActive(input: any): Observable<User> {
+  //   return this.currentUser$.pipe(
+  //     take(1), // take the current user once
+  //     switchMap((creatingUser) => {
+  //       if (!creatingUser?.id) {
+  //         return throwError(() => 'No current user ID found');
+  //       }
 
-        const payload = { ...input, currentUserId: creatingUser.id };
+  //       const payload = { ...input, currentUserId: creatingUser.id };
 
-        return this._httpClient.post<User>(`${this.baseURL}/updateUserActive`, payload).pipe(
-          catchError((err) => {
-            console.error('Toggle active error:', err);
-            return throwError(() => err.error?.message || 'Failed to toggle active status');
-          })
-        );
-      })
-    );
-  }
+  //       return this._httpClient.post<User>(`${this.baseURL}/updateUserActive`, payload).pipe(
+  //         catchError((err) => {
+  //           console.error('Toggle active error:', err);
+  //           return throwError(() => err.error?.message || 'Failed to toggle active status');
+  //         })
+  //       );
+  //     })
+  //   );
+  // }
 
     /**
    * Update one or more properties of the current user safely.
    * Example: this.userService.updateCurrentUser({ socket_id: 'abc123' });
    */
-  updateCurrentUser(partial: Partial<CurrentUser>): void {
-    const current = this._currentUser.value;
-    if (current) {
-      const updated = { ...current, ...partial };
-      this._currentUser.next(updated);
-    } else {
-      console.warn('Tried to update user before currentUser was set.');
-    }
-  }
+  // updateCurrentUser(partial: Partial<CurrentUser>): void {
+  //   const current = this._currentUser.value;
+  //   if (current) {
+  //     const updated = { ...current, ...partial };
+  //     this._currentUser.next(updated);
+  //   } else {
+  //     console.warn('Tried to update user before currentUser was set.');
+  //   }
+  // }
+
+  checkUsername(username: string): Observable<boolean> {
+  return this._httpClient.get<{exists: boolean}>(`${this.baseURL}/check-username/${username}`)
+    .pipe(map(res => res.exists));
+}
+
 }

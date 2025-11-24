@@ -1,0 +1,41 @@
+<!-- system-variables.component.html -->
+<mat-tab-group 
+  [selectedIndex]="variableTypes.indexOf(selectedType)" 
+  (selectedIndexChange)="onTabChange($event)">
+  
+  <mat-tab *ngFor="let type of variableTypes" [label]="type | titlecase">
+    <div class="table-header">
+      <button mat-raised-button color="primary" (click)="openDialog(type)">
+        Add {{ type | titlecase }}
+      </button>
+    </div>
+
+    <table mat-table [dataSource]="data[type]" class="mat-elevation-z8">
+      <ng-container matColumnDef="name">
+        <th mat-header-cell *matHeaderCellDef>Name</th>
+        <td mat-cell *matCellDef="let element">{{ element.name }}</td>
+      </ng-container>
+
+      <ng-container matColumnDef="description">
+        <th mat-header-cell *matHeaderCellDef>Description</th>
+        <td mat-cell *matCellDef="let element">{{ element.description }}</td>
+      </ng-container>
+
+      <ng-container matColumnDef="actions">
+        <th mat-header-cell *matHeaderCellDef>Actions</th>
+        <td mat-cell *matCellDef="let element">
+          <button mat-icon-button color="accent" (click)="openDialog(type, element)">
+            <mat-icon>edit</mat-icon>
+          </button>
+          <button mat-icon-button color="warn" (click)="deleteVariable(type, element.id)">
+            <mat-icon>delete</mat-icon>
+          </button>
+        </td>
+      </ng-container>
+
+      <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+      <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
+    </table>
+
+  </mat-tab>
+</mat-tab-group>

@@ -2,10 +2,8 @@ import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { BehaviorSubject, Observable, of, throwError } from 'rxjs';
 import { catchError, map, tap, switchMap, take } from 'rxjs/operators';
-import { Customer } from './customer.types';
+import { Customer } from './customer.type';
 import { environment } from '../../../environments/environment';
-//import { User } from '../user/user.types';
-//import { UserService } from '../user/user.service';
 
 @Injectable({
   providedIn: 'root',
@@ -17,7 +15,7 @@ export class CustomerService {
     Customer[] | null
   >(null);
 
-  baseURL: string = '/customers';
+  baseURL: string = '/api/customers';
 
   constructor(private _httpClient: HttpClient) {}
 
@@ -66,7 +64,7 @@ export class CustomerService {
     size: number,
     activeFilter?: 'all' | 'true' | 'false'
   ): Observable<{ data: Customer[]; total: number }> {
-    let url = `${environment.apiBaseUrl}/customers/getCustomers?page=${page}&size=${size}`;
+    let url = `${this.baseURL}/getCustomers?page=${page}&size=${size}`;
 
     if (activeFilter && activeFilter !== 'all') {
       url += `&active=${activeFilter}`; // send 'true' or 'false' as string
@@ -79,7 +77,7 @@ export class CustomerService {
     console.log('Creating customer with data:', data);
 
     return this._httpClient
-      .post<Customer>(`${environment.apiBaseUrl}/customers/createNewCustomer`, data)
+      .post<Customer>(`${this.baseURL}/createNewCustomer`, data)
       .pipe(
         catchError((err) =>
           throwError(() => err.error?.message || 'Failed to create customer')
@@ -88,8 +86,9 @@ export class CustomerService {
   }
 
   updateCustomer(payload: any): Observable<Customer> {
+    console.log('Updating customer with payload:', payload);
     return this._httpClient
-      .post<Customer>(`${environment.apiBaseUrl}/customers/updateCustomer`, payload)
+      .post<Customer>(`${this.baseURL}/updateCustomer`, payload)
       .pipe(
         catchError((error) => {
           console.error('Update customer error:', error);
@@ -111,11 +110,3 @@ export class CustomerService {
   }
 }
 
-// uploadAvatar(file: File): Observable<{ filename: string }> {
-//   const formData = new FormData();
-//   formData.append('avatar', file);
-//   return this._httpClient.post<{ filename: string }>(
-//     `${this.baseURL}/upload-avatar`,
-//     formData
-//   );
-// }

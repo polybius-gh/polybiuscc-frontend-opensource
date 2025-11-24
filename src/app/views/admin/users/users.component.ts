@@ -11,9 +11,11 @@ import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { MatInputModule } from '@angular/material/input';
 import { MatCard, MatCardModule } from '@angular/material/card';
-import { User } from '../../services/user/user.types';
-import { CurrentUser } from '../../services/user/currentUser.types';
-import { UserService } from '../../services/user/user.service';
+import { User } from '../../../services/user/user.type';
+//import { CurrentUser } from '../../../services/user/currentUser.type';
+import { UserService } from '../../../services/user/user.service';
+import { UserSessionService } from '../../../services/userSession/user_session.service';
+import { UserSession } from '../../../services/userSession/user_session.type';
 import { UserDialogComponent } from './modal/user-dialog.component';
 import { Subscription } from 'rxjs';
 
@@ -55,7 +57,7 @@ export class UsersComponent implements OnInit {
   loading = false;
   pageSizeControl!: FormControl;
   Math = Math; // Expose Math to template
-  _currentUser: CurrentUser | null = null;
+  //  _currentUser: CurrentUser | null = null;
   _userSub?: Subscription;
 
   activeFilter: 'all' | 'true' | 'false' = 'all';
@@ -63,39 +65,56 @@ export class UsersComponent implements OnInit {
 
   highlightNewUserId: string | null = null;
 
-  constructor(private _userService: UserService, private _dialog: MatDialog) {
+  public _userSession: UserSession | null = null;
+
+  constructor(
+    private _userSessionService: UserSessionService,
+    private _dialog: MatDialog,
+    private _userService: UserService
+  ) {
     this.pageSizeControl = new FormControl(this.pageSize);
   }
 
-    displayedColumns: string[] = [
+  displayedColumns: string[] = [
     'username',
     'email_address',
     'full_name',
     'title',
     'security_level',
     'avatar',
-    'actions'
+    'actions',
   ];
 
   ngOnInit(): void {
     this.loadUsers();
     this.pageSizeControl.valueChanges.subscribe((size: number) => this.pageSizeChanged(size));
-    this._userSub = this._userService.currentUser$.subscribe((currentUser) => {
-      this._currentUser = currentUser;
+    this._userSub = this._userSessionService.userSession$.subscribe((userSession) => {
+      this._userSession = userSession;
       // you can now access this.currentUser in your component
-      console.log('Current user:', this._currentUser);
+      //console.log('Current userSession:', this._userSession?.id);
     });
   }
 
   openDetails(user?: User): void {
+    console.log('Opening user dialog for:', user);
     const dialogRef = this._dialog.open(UserDialogComponent, {
       width: '80vw', // 80% of viewport width
       height: '80vh', // 80% of viewport height
       maxWidth: '100vw',
       maxHeight: '100vh',
       panelClass: 'user-dialog',
-      data: user ? { user } : { isNew: true },
+      data: {
+        user: user || null,
+        isNew: !user,
+        currentUserId: this._userSession?.user_id, // Pass current user ID for audit
+      },
       autoFocus: false,
+    });
+
+    dialogRef.afterClosed().subscribe((result) => {
+      if (result === 'updated') {
+        this.loadUsers(); // ⬅️ refresh the grid
+      }
     });
   }
   // getSipEnabledControl(userId: string): FormControl {
@@ -134,8 +153,21 @@ export class UsersComponent implements OnInit {
     this.showCancelModal = false;
   }
 
-  addNewUser() {
-    //coming soon
+  openCreateUser(): void {
+    const dialogRef = this._dialog.open(UserDialogComponent, {
+      width: '80vw', // 80% of viewport width
+      height: '80vh', // 80% of viewport height
+      maxWidth: '100vw',
+      maxHeight: '100vh',
+      panelClass: 'user-dialog',
+      data: { isNew: true, currentUserId: this._userSession?.user_id }, // ⬅️ no user object, triggers create mode
+    });
+
+    dialogRef.afterClosed().subscribe((result) => {
+      if (result === 'created') {
+        this.loadUsers(); // refresh user grid
+      }
+    });
   }
 
   // addNewUser() {
@@ -200,6 +232,7 @@ export class UsersComponent implements OnInit {
       error: () => (this.loading = false),
     });
   }
+
   // loadUsers(): void {
   //   this._userService
   //     .getUsers(this.page, this.pageSize, this.activeFilter)
@@ -315,29 +348,29 @@ export class UsersComponent implements OnInit {
   //   this.expandedRows.delete(userId);
   // }
 
-  toggleUserActiveSwitch(user: User) {
-    const newActive = !user.active;
-    const input = {
-      id: user.id,
-      active: newActive,
-      sipEnabled: !user.sip_enabled,
-      sipExtensionId: !user.sipData?.id,
-    };
-    // Optimistic UI
-    user.active = newActive;
+  // toggleUserActiveSwitch(user: User) {
+  //   const newActive = !user.active;
+  //   const input = {
+  //     id: user.id,
+  //     active: newActive,
+  //     sipEnabled: !user.sip_enabled,
+  //     sipExtensionId: !user.sipData?.id,
+  //   };
+  //   // Optimistic UI
+  //   user.active = newActive;
 
-    this._userService.toggleUserActive(input).subscribe({
-      next: (updatedUser) => {
-        console.log('User active status updated:', updatedUser);
-        this.loadUsers();
-      },
-      error: (err) => {
-        console.error('Failed to toggle active:', err);
-        // Revert on error
-        user.active = !newActive;
-      },
-    });
-  }
+  //   this._userService.toggleUserActive(input).subscribe({
+  //     next: (updatedUser) => {
+  //       console.log('User active status updated:', updatedUser);
+  //       this.loadUsers();
+  //     },
+  //     error: (err) => {
+  //       console.error('Failed to toggle active:', err);
+  //       // Revert on error
+  //       user.active = !newActive;
+  //     },
+  //   });
+  // }
 
   pageChanged(newPage: number): void {
     this.page = newPage;

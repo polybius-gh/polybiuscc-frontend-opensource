@@ -1,0 +1,38 @@
+<h2 mat-dialog-title>
+  {{ data.variable ? 'Edit' : 'Add' }} {{ data.type | titlecase }}
+</h2>
+
+<mat-dialog-content [formGroup]="form" class="dialog-content">
+
+  <!-- Name / Status / Action Name -->
+  <mat-form-field appearance="fill" class="full-width">
+    <mat-label>
+      {{ data.type === 'user_status' ? 'Status' : 'Action Name' }}
+    </mat-label>
+    <input matInput formControlName="name" />
+    <mat-error *ngIf="form.get('name')?.hasError('required')">
+      Name is required
+    </mat-error>
+  </mat-form-field>
+
+  <!-- Description -->
+  <mat-form-field appearance="fill" class="full-width">
+    <mat-label>Description</mat-label>
+    <textarea matInput formControlName="description" rows="3"></textarea>
+  </mat-form-field>
+
+</mat-dialog-content>
+
+<mat-dialog-actions align="end">
+
+  <button mat-button mat-dialog-close>Cancel</button>
+  <button
+    mat-raised-button
+    color="primary"
+    [disabled]="form.invalid"
+    (click)="save()"
+  >
+    {{ data.variable ? 'Update' : 'Create' }}
+  </button>
+</mat-dialog-actions>
+

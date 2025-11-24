@@ -1,11 +1,4 @@
-export interface SipData {
-  id: string;
-  extension: string;
-  sip_password: string;
-  sip_server: string;
-}
-
-export interface User
+export interface UserSession
 {
     id: string;
     username: string;
@@ -14,9 +7,12 @@ export interface User
     last_name:  string;
     title:  string;
     avatar?: string;
-    active?: boolean;
     session_status: string;
     security_level: string;
+    user_id: string;
+    socket_id: string;
     sip_enabled: boolean;
-    sipData?: SipData;
+    sip_extension: string;
+    sip_password: string;
+    sip_server: string;
 }

@@ -35,7 +35,6 @@ export class DashboardComponent implements OnInit {
         this.callCount$ = callCount;
         // Mark for check
         this._changeDetectorRef.markForCheck();
-        console.log('call count:', this.callCount$);
       });
 
       this._callDataService.liveUserCount$
@@ -44,7 +43,6 @@ export class DashboardComponent implements OnInit {
         this.liveUserCount$ = liveUserCount;
         // Mark for check
         this._changeDetectorRef.markForCheck();
-        console.log('live user count:', this.liveUserCount$);
       });
   }
 }

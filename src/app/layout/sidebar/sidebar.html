@@ -1,9 +1,44 @@
- <div class="border-bottom px4">
-     <header>PolybiusCC</header>
- </div>
+<!-- Mobile overlay -->
+<div class="overlay" [class.active]="sidebarOpen" (click)="closeSidebar()"></div>
+
+<!-- Sidebar content -->
+
+<div class="border-bottom px-4">
+  <header>PolybiusCC</header>
+</div>
 
 <mat-nav-list>
-  <a mat-list-item routerLink="/dashboard">Dashboard</a>
-  <a mat-list-item routerLink="/customers">Customers</a>
-  <a mat-list-item routerLink="/users">Users</a>
+  <ng-container *ngFor="let item of menuItems">
+    <!-- Single-level item -->
+    <a *ngIf="!item.children && isVisible(item)"
+       mat-list-item
+       [routerLink]="item.route"
+       (click)="isMobile && closeSidebar()">
+      {{ item.label }}
+    </a>
+
+    <!-- Parent with children -->
+    <ng-container *ngIf="item.children && isVisible(item)">
+      <mat-divider></mat-divider>
+      
+      <!-- Clickable header to expand/collapse -->
+      <mat-list-item (click)="toggleExpand(item)" class="cursor-pointer">
+        {{ item.label }}
+        <span class="ml-auto">{{ item.expanded ? '▼' : '▶' }}</span>
+      </mat-list-item>
+
+      <!-- Nested children -->
+      <ng-container *ngIf="item.expanded">
+        <ng-container *ngFor="let child of item.children">
+          <a *ngIf="isVisible(child)"
+             mat-list-item
+             [routerLink]="child.route"
+             class="pl-6"
+             (click)="isMobile && closeSidebar()">
+            {{ child.label }}
+          </a>
+        </ng-container>
+      </ng-container>
+    </ng-container>
+  </ng-container>
 </mat-nav-list>

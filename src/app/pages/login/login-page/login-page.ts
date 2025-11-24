@@ -44,7 +44,7 @@ export class LoginPage {
   ) {}
 
     ngOnInit(): void {
-      console.log('loading login page');
+      //console.log('loading login page');
     // Create the form
     this.signInForm = new FormGroup({
       username: new FormControl('', Validators.required),
@@ -120,11 +120,11 @@ export class LoginPage {
   const { username, password, rememberMe } = this.signInForm.value;
 
   try {
-    console.log('login sign-in processing...');
+    //console.log('login sign-in processing...');
 
     // 1️⃣ Perform sign-in
     const res = await firstValueFrom(this._authService.signIn({ username, password }));
-    console.log('authSignIn res:', res);
+    //console.log('authSignIn res:', res);
     // 2️⃣ Load user session after sign-in
     //await this._userSessionService.loadUserSession(res.sessionID);
 
@@ -135,7 +135,7 @@ export class LoginPage {
       localStorage.removeItem('savedUserName');
     }
 
-    console.log('navigating by URL');
+    //console.log('navigating by URL');
     this._router.navigateByUrl(
       this._activatedRoute.snapshot.queryParamMap.get('redirectURL') || '/dashboard'
     );

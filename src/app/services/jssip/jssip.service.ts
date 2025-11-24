@@ -1,6 +1,7 @@
 import { Injectable, NgZone } from '@angular/core';
 import * as JsSIP from 'jssip';
 import { BehaviorSubject, ReplaySubject } from 'rxjs';
+import { UserSession } from '../userSession/user_session.type';
 
 export interface SipConfig {
   uri: string;
@@ -17,7 +18,7 @@ export interface SipConfig {
 export class SipService {
   private ua!: JsSIP.UA;
   private mediaElement!: HTMLAudioElement;
-
+  //private _userSession: UserSession | null = null;
   public status$ = new BehaviorSubject<string>('disconnected');
   public callStatus$ = new BehaviorSubject<string>('idle');
   public incomingCall$ = new ReplaySubject<any>();
@@ -33,9 +34,20 @@ export class SipService {
    * Initializes and starts the JsSIP User Agent.
    */
   //connect(config: SipConfig, mediaElement: HTMLAudioElement) {
-  connect(config: SipConfig) {
-    console.log('connecting to sip server:', config);
-     if (!this.mediaElement) {
+  connect(userSession: UserSession | null) {
+    //console.log('jssip userSession received:', userSession)
+
+    let _userSession = userSession;
+
+    const config: SipConfig = {
+      uri: `sip:${_userSession?.sip_extension}@${_userSession?.sip_server}`,
+      ws_servers: `wss://${_userSession?.sip_server}:8089/ws`,
+      authorizationUser: _userSession?.sip_extension,
+      password: _userSession?.sip_password,
+    };
+
+    //console.log('connecting to sip server:', config);
+    if (!this.mediaElement) {
       console.error('Media element not set!');
       return;
     }
@@ -47,27 +59,15 @@ export class SipService {
     });
 
     // UA event handler
-    this.ua.on('connected', () =>
-      this.ngZone.run(() => this.status$.next('connected'))
-    );
-    this.ua.on('disconnected', () =>
-      this.ngZone.run(() => this.status$.next('disconnected'))
-    );
-    this.ua.on('registered', () =>
-      this.ngZone.run(() => this.status$.next('registered'))
-    );
-    this.ua.on('unregistered', () =>
-      this.ngZone.run(() => this.status$.next('unregistered'))
-    );
+    this.ua.on('connected', () => this.ngZone.run(() => this.status$.next('connected')));
+    this.ua.on('disconnected', () => this.ngZone.run(() => this.status$.next('disconnected')));
+    this.ua.on('registered', () => this.ngZone.run(() => this.status$.next('registered')));
+    this.ua.on('unregistered', () => this.ngZone.run(() => this.status$.next('unregistered')));
     this.ua.on('registrationFailed', () =>
       this.ngZone.run(() => this.status$.next('registrationFailed'))
     );
-    this.ua.on('newRTCSession', () =>
-      this.ngZone.run(() => this.status$.next('newRTCSession'))
-    );
-    this.ua.on('newMessage', () =>
-      this.ngZone.run(() => this.status$.next('newMessage'))
-    );
+    this.ua.on('newRTCSession', () => this.ngZone.run(() => this.status$.next('newRTCSession')));
+    this.ua.on('newMessage', () => this.ngZone.run(() => this.status$.next('newMessage')));
 
     // Handle new sessions (incoming and outgoing)
     this.ua.on('newRTCSession', (data: any) => {
@@ -83,8 +83,7 @@ export class SipService {
         this.ngZone.run(() => this.callStatus$.next('idle'));
       };
 
-      const STATUS_TERMINATED = (session as any).constructor.C
-        .STATUS_TERMINATED;
+      const STATUS_TERMINATED = (session as any).constructor.C.STATUS_TERMINATED;
 
       session.on('ended', clearActiveSession);
       session.on('failed', clearActiveSession);
@@ -171,9 +170,7 @@ export class SipService {
       if (this.mediaElement && e.track.kind === 'audio') {
         if (this.mediaElement.srcObject !== e.streams[0]) {
           this.mediaElement.srcObject = e.streams[0];
-          this.mediaElement
-            .play()
-            .catch((err) => console.error('Media play failed', err));
+          this.mediaElement.play().catch((err) => console.error('Media play failed', err));
         } else {
           console.log('Stream already attached to media element');
         }

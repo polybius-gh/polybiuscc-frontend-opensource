@@ -1,239 +1,83 @@
-<h2 mat-dialog-title>{{ isNew ? 'Add Customer' : 'Edit Customer' }}</h2>
+<h2 mat-dialog-title>{{ isEditMode ? 'Edit Customer' : 'Add Customer' }}</h2>
 
-<mat-dialog-content class="mat-typography">
-  <mat-tab-group>
+<mat-dialog-content>
+  <mat-card class="customer-card">
+    <form [formGroup]="form" class="customer-form">
+      <div class="grid-layout">
+        <!-- LEFT COLUMN: Blank for now -->
+        <div class="left-col">
+          <div class="form-grid">
+            <!-- ROW 1 -->
+            <mat-form-field appearance="fill">
+              <mat-label>Name</mat-label>
+              <input matInput formControlName="name" />
+            </mat-form-field>
+            <!-- ROW 2 -->
+            <mat-form-field appearance="fill">
+              <mat-label>Company Name</mat-label>
+              <input matInput formControlName="company_name" />
+            </mat-form-field>
 
-    <!-- CUSTOMER TAB (simple form) -->
-    <mat-tab label="Customer">
-      <form [formGroup]="form" class="p-4 grid grid-cols-2 gap-4">
-
-        <mat-form-field appearance="outline">
-          <mat-label>Company Name</mat-label>
-          <input matInput formControlName="company_name" />
-        </mat-form-field>
-
-        <mat-form-field appearance="outline">
-          <mat-label>Name</mat-label>
-          <input matInput formControlName="name" />
-        </mat-form-field>
-
-        <mat-form-field appearance="outline">
-          <mat-label>Email</mat-label>
-          <input matInput formControlName="email_address" />
-        </mat-form-field>
-
-        <mat-form-field appearance="outline">
-          <mat-label>Status</mat-label>
-          <mat-select formControlName="status">
-            <mat-option [value]="true">Active</mat-option>
-            <mat-option [value]="false">Inactive</mat-option>
-          </mat-select>
-        </mat-form-field>
-
-        <div class="col-span-2 text-right">
-          <button mat-flat-button color="primary" (click)="saveCustomer()">Save</button>
+            <!-- ROW 3 -->
+            <mat-form-field appearance="fill">
+              <mat-label>Email</mat-label>
+              <input matInput formControlName="email_address" />
+            </mat-form-field>
+            <!-- ROW 4 -->
+            <mat-form-field appearance="fill">
+              <mat-label>Phone</mat-label>
+              <input matInput formControlName="phone_number" />
+            </mat-form-field>
+          </div>
         </div>
-      </form>
-    </mat-tab>
 
-    <!-- CONTACTS TAB -->
-    <mat-tab label="Contacts">
-      <div class="p-4" [formGroup] = "form">
-        <table mat-table [dataSource]="contacts.controls" class="mat-elevation-z1 w-full" formArrayName="contacts">
-
-          <!-- First Name -->
-          <ng-container matColumnDef="first_name">
-            <th mat-header-cell *matHeaderCellDef>First Name</th>
-            <td mat-cell *matCellDef="let contact; let i = index" [formGroupName]="i">
-              <input matInput formControlName="first_name" />
-            </td>
-          </ng-container>
-
-          <!-- Last Name -->
-          <ng-container matColumnDef="last_name">
-            <th mat-header-cell *matHeaderCellDef>Last Name</th>
-            <td mat-cell *matCellDef="let contact; let i = index" [formGroupName]="i">
-              <input matInput formControlName="last_name" />
-            </td>
-          </ng-container>
-
-          <!-- Email -->
-          <ng-container matColumnDef="email">
-            <th mat-header-cell *matHeaderCellDef>Email</th>
-            <td mat-cell *matCellDef="let contact; let i = index" [formGroupName]="i">
-              <input matInput formControlName="email" />
-            </td>
-          </ng-container>
-
-          <!-- Phone -->
-          <ng-container matColumnDef="phone">
-            <th mat-header-cell *matHeaderCellDef>Phone</th>
-            <td mat-cell *matCellDef="let contact; let i = index" [formGroupName]="i">
-              <input matInput formControlName="phone" />
-            </td>
-          </ng-container>
-
-          <!-- Actions -->
-          <ng-container matColumnDef="actions">
-            <th mat-header-cell *matHeaderCellDef>Actions</th>
-            <td mat-cell *matCellDef="let contact; let i = index">
-              <button mat-icon-button color="warn" (click)="removeContact(i)">
-                <mat-icon>delete</mat-icon>
-              </button>
-            </td>
-          </ng-container>
-
-          <tr mat-header-row *matHeaderRowDef="contactColumns"></tr>
-          <tr mat-row *matRowDef="let row; columns: contactColumns;"></tr>
-        </table>
-        <div class="mt-2">
-          <button mat-flat-button color="primary" (click)="addContact()">Add Contact</button>
-        </div>
-      </div>
-    </mat-tab>
-
-    <!-- ADDRESSES TAB -->
-    <mat-tab label="Addresses">
-      <div class="p-4" [formGroup] = "form">
-        <table mat-table [dataSource]="addresses.controls" class="mat-elevation-z1 w-full" formArrayName="addresses">
-
-          <ng-container matColumnDef="type">
-            <th mat-header-cell *matHeaderCellDef>Type</th>
-            <td mat-cell *matCellDef="let addr; let i = index" [formGroupName]="i">
-              <input matInput formControlName="type" />
-            </td>
-          </ng-container>
-
-          <ng-container matColumnDef="address_line_1">
-            <th mat-header-cell *matHeaderCellDef>Address 1</th>
-            <td mat-cell *matCellDef="let addr; let i = index" [formGroupName]="i">
+        <!-- RIGHT COLUMN: User Fields -->
+        <div class="right-col">
+          <div class="form-grid">
+            <!-- ROW 1 -->
+            <mat-form-field appearance="fill">
+              <mat-label>Address Line !</mat-label>
               <input matInput formControlName="address_line_1" />
-            </td>
-          </ng-container>
+            </mat-form-field>
 
-          <ng-container matColumnDef="city">
-            <th mat-header-cell *matHeaderCellDef>City</th>
-            <td mat-cell *matCellDef="let addr; let i = index" [formGroupName]="i">
+            <mat-form-field appearance="fill">
+              <mat-label>Address Line 2</mat-label>
+              <input matInput formControlName="address_line_2" />
+            </mat-form-field>
+
+            <!-- ROW 2 -->
+            <mat-form-field appearance="fill">
+              <mat-label>City</mat-label>
               <input matInput formControlName="city" />
-            </td>
-          </ng-container>
+            </mat-form-field>
 
-          <ng-container matColumnDef="state">
-            <th mat-header-cell *matHeaderCellDef>State</th>
-            <td mat-cell *matCellDef="let addr; let i = index" [formGroupName]="i">
-              <input matInput formControlName="state" />
-            </td>
-          </ng-container>
+            <!-- ROW 3 -->
+            <mat-form-field appearance="fill">
+              <mat-label>State</mat-label>
+              <mat-select formControlName="state">
+                <mat-option value="CO">Colorado</mat-option>
+                <mat-option value="CA">California</mat-option>
+                <mat-option value="NY">New York</mat-option>
+              </mat-select>
+            </mat-form-field>
 
-          <ng-container matColumnDef="zip">
-            <th mat-header-cell *matHeaderCellDef>ZIP</th>
-            <td mat-cell *matCellDef="let addr; let i = index" [formGroupName]="i">
-              <input matInput formControlName="zip" />
-            </td>
-          </ng-container>
+            <!-- ROW 4 -->
+            <mat-form-field appearance="fill">
+              <mat-label>Postal Code</mat-label>
+              <input matInput formControlName="postal_code" />
+            </mat-form-field>
+          </div>
 
-          <ng-container matColumnDef="actions">
-            <th mat-header-cell *matHeaderCellDef>Actions</th>
-            <td mat-cell *matCellDef="let addr; let i = index">
-              <button mat-icon-button color="warn" (click)="removeAddress(i)">
-                <mat-icon>delete</mat-icon>
-              </button>
-            </td>
-          </ng-container>
-
-          <tr mat-header-row *matHeaderRowDef="addressColumns"></tr>
-          <tr mat-row *matRowDef="let row; columns: addressColumns;"></tr>
-        </table>
-        <div class="mt-2">
-          <button mat-flat-button color="primary" (click)="addAddress()">Add Address</button>
+          <div class="checkbox-row">
+            <mat-checkbox formControlName="status">Active</mat-checkbox>
+          </div>
         </div>
       </div>
-    </mat-tab>
-
-    <!-- PHONES TAB -->
-    <mat-tab label="Phones">
-      <div class="p-4" [formGroup] = "form">
-        <table mat-table [dataSource]="phones.controls" class="mat-elevation-z1 w-full" formArrayName="phones">
-
-          <ng-container matColumnDef="type">
-            <th mat-header-cell *matHeaderCellDef>Type</th>
-            <td mat-cell *matCellDef="let phone; let i = index" [formGroupName]="i">
-              <input matInput formControlName="type" />
-            </td>
-          </ng-container>
-
-          <ng-container matColumnDef="number">
-            <th mat-header-cell *matHeaderCellDef>Number</th>
-            <td mat-cell *matCellDef="let phone; let i = index" [formGroupName]="i">
-              <input matInput formControlName="number" />
-            </td>
-          </ng-container>
-
-          <ng-container matColumnDef="extension">
-            <th mat-header-cell *matHeaderCellDef>Extension</th>
-            <td mat-cell *matCellDef="let phone; let i = index" [formGroupName]="i">
-              <input matInput formControlName="extension" />
-            </td>
-          </ng-container>
-
-          <ng-container matColumnDef="actions">
-            <th mat-header-cell *matHeaderCellDef>Actions</th>
-            <td mat-cell *matCellDef="let phone; let i = index">
-              <button mat-icon-button color="warn" (click)="removePhone(i)">
-                <mat-icon>delete</mat-icon>
-              </button>
-            </td>
-          </ng-container>
-
-          <tr mat-header-row *matHeaderRowDef="phoneColumns"></tr>
-          <tr mat-row *matRowDef="let row; columns: phoneColumns;"></tr>
-        </table>
-        <div class="mt-2">
-          <button mat-flat-button color="primary" (click)="addPhone()">Add Phone</button>
-        </div>
-      </div>
-    </mat-tab>
-
-    <!-- NOTES TAB -->
-    <mat-tab label="Notes">
-      <div class="p-4" [formGroup] = "form">
-        <table mat-table [dataSource]="notes.controls" class="mat-elevation-z1 w-full" formArrayName="notes">
-
-          <ng-container matColumnDef="content">
-            <th mat-header-cell *matHeaderCellDef>Note</th>
-            <td mat-cell *matCellDef="let note; let i = index" [formGroupName]="i">
-              <textarea matInput formControlName="content" rows="2" class="w-full"></textarea>
-            </td>
-          </ng-container>
-
-          <ng-container matColumnDef="createdAt">
-            <th mat-header-cell *matHeaderCellDef>Created</th>
-            <td mat-cell *matCellDef="let note">
-              {{ note.value.createdAt | date:'short' }}
-            </td>
-          </ng-container>
-
-          <ng-container matColumnDef="actions">
-            <th mat-header-cell *matHeaderCellDef>Actions</th>
-            <td mat-cell *matCellDef="let note; let i = index">
-              <button mat-icon-button color="warn" (click)="removeNote(i)">
-                <mat-icon>delete</mat-icon>
-              </button>
-            </td>
-          </ng-container>
-
-          <tr mat-header-row *matHeaderRowDef="noteColumns"></tr>
-          <tr mat-row *matRowDef="let row; columns: noteColumns;"></tr>
-        </table>
-        <div class="mt-2">
-          <button mat-flat-button color="primary" (click)="addNote()">Add Note</button>
-        </div>
-      </div>
-    </mat-tab>
-
-  </mat-tab-group>
+    </form>
+  </mat-card>
 </mat-dialog-content>
 
 <mat-dialog-actions align="end">
-  <button mat-button (click)="close()">Close</button>
+  <button mat-button (click)="close()">Cancel</button>
+  <button mat-raised-button color="primary" (click)="save()">Save</button>
 </mat-dialog-actions>

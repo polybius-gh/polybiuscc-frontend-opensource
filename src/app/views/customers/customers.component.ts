@@ -18,10 +18,10 @@ import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatProgressSpinner } from '@angular/material/progress-spinner';
 import { MatInputModule } from '@angular/material/input';
 import { CustomerService } from '../../services/customer/customer.service';
-import { Customer } from '../../services/customer/customer.types';
+import { Customer } from '../../services/customer/customer.type';
 //import { CurrentUser } from '../../services/user/currentUser.types';
 import { UserSessionService } from '../../services/userSession/user_session.service';
-import { UserSession } from '../../services/userSession/user_session.types';
+import { UserSession } from '../../services/userSession/user_session.type';
 import { UserService } from '../../services/user/user.service';
 import { CustomerDialogComponent } from './modal/customer-dialog.component';
 import { MatCardModule } from '@angular/material/card';
@@ -50,9 +50,9 @@ import { Subscription, takeUntil, Subject } from 'rxjs';
 export class CustomersComponent implements OnInit {
   displayedColumns: string[] = [
     'company_name',
-    'primary_contact',
+    'name',
     'email_address',
-    'status',
+    'active',
     'actions',
   ];
   customers: Customer[] = [];
@@ -93,19 +93,13 @@ export class CustomersComponent implements OnInit {
 
     this.loadCustomers();
 
-    // this._userSub = this._userService.currentUser$.subscribe((currentUser) => {
-    //   this._currentUser = currentUser;
-    //   // you can now access this.currentUser in your component
-    //   console.log('Current user:', this._currentUser);
-    // });
-
     this._userSessionService.userSession$
       .pipe(takeUntil(this._unsubscribeAll))
       .subscribe((userSession: UserSession | null) => {
         this._userSession = userSession;
         // Mark for check
         this._changeDetectorRef.markForCheck();
-        console.log('header userSession:', this._userSession);
+        //console.log('customer - userSession:', this._userSession);
       });
   }
 
@@ -165,7 +159,19 @@ export class CustomersComponent implements OnInit {
     }
   }
 
-  addNewCustomer() {
-    console.log('add new customer stuff here...');
+  addNewCustomer(): void {
+     const dialogRef = this._dialog.open(CustomerDialogComponent, {
+      width: '80vw', // 80% of viewport width
+      height: '50vh', // 80% of viewport height
+      maxWidth: '100vw',
+      maxHeight: '50vh',
+      panelClass: 'customer-dialog',
+      data:  { isNew: false },
+      autoFocus: false,
+    });
+
+    dialogRef.afterClosed().subscribe((refresh) => {
+      if (refresh) this.loadCustomers();
+    });
   }
 }

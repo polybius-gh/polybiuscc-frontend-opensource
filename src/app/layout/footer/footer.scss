@@ -6,3 +6,9 @@
   padding: 8px 0;
   font: var(--mat-sys-body-small);
 }
+
+@media (max-width: 599px) {
+  .content-area {
+    padding-bottom: 48px; // match footer height
+  }
+}

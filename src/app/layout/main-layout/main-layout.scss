@@ -30,14 +30,33 @@ app-header {
     transform: translateX(-100%);
   }
 
-  @media (max-width: 599px) {
-    top: 56px;
+   @media (max-width: 599px) {
+    position: fixed;
+    top: 56px;               // mobile header
+    left: 0;
+    width: 200px;
     height: calc(100vh - 56px);
-    .sidebar {
-    box-shadow: 2px 0 6px rgba(0, 0, 0, 0.15);
-  }
+    transform: translateX(-100%);
+    box-shadow: 2px 0 6px rgba(0,0,0,0.25);
+    transition: transform 0.3s ease;
+    z-index: 1300;
+
+    &.open { transform: translateX(0); }
   }
 }
+
+/* Overlay */
+// .mobile-overlay {
+//   @media (max-width: 599px) {
+//     position: fixed;
+//     top: 56px;
+//     left: 0;
+//     width: 100%;
+//     height: calc(100vh - 56px);
+//     background: rgba(0,0,0,0.3);
+//     z-index: 1200;
+//   }
+// }
 
 /* Main Content */
 .main-content {
@@ -81,3 +100,25 @@ app-footer {
   z-index: 500;               // below header but above content background
 }
 
+/* -------- Mobile -------- */
+@media (max-width: 599px) {
+  .main-content {
+    margin-left: 0;
+    margin-top: 56px; // mobile header
+    height: calc(100vh - 56px);
+  }
+
+  .content-area { padding-bottom: 48px; } // match footer
+}
+// @media (max-width: 599px) {
+//   .toolbar-top {
+//     flex-wrap: wrap; // allow wrapping of right-icons and session message
+//     justify-content: space-between;
+//   }
+
+//   .right-icons {
+//     flex-wrap: wrap;
+//     justify-content: flex-end;
+//     gap: 4px;
+//   }
+// }

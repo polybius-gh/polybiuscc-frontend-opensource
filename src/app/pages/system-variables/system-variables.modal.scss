@@ -1,0 +1,18 @@
+.dialog-content {
+  display: flex;
+  flex-direction: column;
+  gap: 16px; // space between fields
+  width: 100%;
+}
+
+.full-width {
+  width: 100%;
+}
+
+mat-dialog-actions {
+  margin-top: 16px;
+
+  button + button {
+    margin-left: 8px; // space between Cancel and Save buttons
+  }
+}
