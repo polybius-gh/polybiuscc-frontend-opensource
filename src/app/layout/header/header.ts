@@ -1,3 +1,5 @@
+//header.ts
+
 import { Component, Input } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { MatToolbarModule } from '@angular/material/toolbar';
@@ -73,7 +75,7 @@ export class Header {
 
   // Track call state and statuses
   public inCall: boolean = false;
-//  public selectedStatus: string = 'signedIn';
+  //  public selectedStatus: string = 'signedIn';
   public agentStatuses: string[] = ['Available', 'Busy', 'Wrap-up', 'Break'];
 
   public elapsedSeconds: number = 0;
@@ -120,13 +122,20 @@ export class Header {
         }
       });
 
-    //configure SIP upon user session load
-    // const config: SipConfig = {
-    //   uri: `sip:${this._userSession?.sip_extension}@${this._userSession?.sip_server}`,
-    //   ws_servers: `wss://${this._userSession?.sip_server}:8089/ws`,
-    //   authorizationUser: this._userSession?.sip_extension,
-    //   password: this._userSession?.sip_password,
-    // };
+    this._sipService.incomingCall$.subscribe((session) => {
+      if (session) {
+        this.incomingCall = session;
+        this.isRinging = true;
+
+        const clearRinging = () => {
+          this.isRinging = false;
+          session.off('ended', clearRinging);
+          session.off('failed', clearRinging);
+        };
+        session.on('ended', clearRinging);
+        session.on('failed', clearRinging);
+      }
+    });
 
     //connect to SIP server
     this._sipService.connect(this._userSession);
@@ -226,14 +235,22 @@ export class Header {
   }
 
   //answer call
+  // answerCall() {
+  //   if (this.incomingCall) {
+  //     this.answeredCall = true;
+  //     this._sipService.answer(this.incomingCall);
+  //     this.incomingCall = null;
+  //   }
+  // }
+  // Answering call
   answerCall() {
     if (this.incomingCall) {
       this.answeredCall = true;
       this._sipService.answer(this.incomingCall);
       this.incomingCall = null;
+      this.isRinging = false;
     }
   }
-
   updateTime(): void {
     const now = new Date();
     this.currentTime = now.toLocaleTimeString([], {
@@ -264,7 +281,6 @@ export class Header {
 
     this._userSessionService.changeStatus(sessionID, status).subscribe({
       next: (res) => {
-
         // Remove paused message after first manual status change
         if (this.showPausedMessage) {
           this.showPausedMessage = false;

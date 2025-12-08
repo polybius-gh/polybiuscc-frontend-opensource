@@ -17,7 +17,7 @@ import { SystemVariable } from '../../../services/system-variables/system-variab
 })
 
 export class SystemVariables implements OnInit {
-  variableTypes = ['user_status', 'inbound_actions'];
+  variableTypes = ['user_status', 'inbound_actions', 'skill_groups'];
   data: { [key: string]: SystemVariable[] } = {};
   selectedType = 'user_status';
   displayedColumns = ['name', 'description', 'actions'];

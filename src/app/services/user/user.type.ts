@@ -17,5 +17,6 @@ export interface User
     active?: boolean;
     security_level: string;
     sip_enabled: boolean;
+    skill_groups?: string[];
     sipData?: SipData;
 }

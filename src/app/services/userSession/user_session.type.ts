@@ -15,4 +15,5 @@ export interface UserSession
     sip_extension: string;
     sip_password: string;
     sip_server: string;
+    skill_groups: string[];
 }

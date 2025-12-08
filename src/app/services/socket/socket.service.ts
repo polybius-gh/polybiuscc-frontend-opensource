@@ -20,7 +20,7 @@ export class SocketService {
     private _callDataService: CallDataService,
     private _socket: Socket
   ) {
-    _socket.on('connect',  () => {
+    _socket.on('connect', () => {
       console.log('socket service connected:', _socket.id);
       //initializing listeners
       this._callDataService.initializeListeners();
@@ -37,44 +37,44 @@ export class SocketService {
 
   //connect to socket
 
-socketConnect(sessionID: string): Promise<string> {
-  this._socket.ioSocket.auth = { session_id: sessionID };
+  socketConnect(sessionID: string): Promise<string> {
+    this._socket.ioSocket.auth = { session_id: sessionID };
 
-  return new Promise((resolve, reject) => {
-    if (this._socket.connected && this._socket.id) {
-      // Already connected and ID is defined
-      resolve(this._socket.id);
-    } else {
-      this._socket.once('connect', () => {
-        if (this._socket.id) {
-          resolve(this._socket.id); // safe now
-        } else {
-          reject(new Error('Socket connected but ID is undefined'));
-        }
-      });
+    return new Promise((resolve, reject) => {
+      if (this._socket.connected && this._socket.id) {
+        // Already connected and ID is defined
+        resolve(this._socket.id);
+      } else {
+        this._socket.once('connect', () => {
+          if (this._socket.id) {
+            resolve(this._socket.id); // safe now
+          } else {
+            reject(new Error('Socket connected but ID is undefined'));
+          }
+        });
 
-      const timeout = setTimeout(() => {
-        reject(new Error('Socket connection timed out'));
-      }, 5000);
+        const timeout = setTimeout(() => {
+          reject(new Error('Socket connection timed out'));
+        }, 5000);
 
-      this._socket.once('connect', () => clearTimeout(timeout));
+        this._socket.once('connect', () => clearTimeout(timeout));
 
-      this._socket.connect();
-    }
-  });
-}
+        this._socket.connect();
+      }
+    });
+  }
 
+  emitUserSessionEvent(data: any) {
+    console.log('🛰️ Emitting user session event:', data);
+    this._socket.emit('userSessionEvent', data);
+  }
 
-
-
-
-
-//   socketConnect(sessionID: string) {
-//     this._socket.ioSocket.auth = { session_id: sessionID }; // runtime
-//     if (!this._socket.connected) {
-//       this._socket.connect();
-//     }
-//   }
+  //   socketConnect(sessionID: string) {
+  //     this._socket.ioSocket.auth = { session_id: sessionID }; // runtime
+  //     if (!this._socket.connected) {
+  //       this._socket.connect();
+  //     }
+  //   }
 
   /**
    * Register Socket Session

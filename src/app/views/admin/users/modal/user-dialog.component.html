@@ -2,127 +2,227 @@
 
 <mat-dialog-content>
   <mat-card class="user-card">
-    <form [formGroup]="form" class="user-form">
-      <div class="grid-layout">
-        <!-- LEFT COLUMN: Avatar -->
-        <div class="left-col">
-          <div class="avatar-wrapper">
-            <img *ngIf="avatarPreview" [src]="avatarPreview" alt="Avatar" class="avatar" />
+    <mat-tab-group>
+      <!-- TAB 1: USER INFO -->
+      <mat-tab>
+        <ng-template mat-tab-label>
+          <mat-icon>person</mat-icon>
+          <span>User Info</span>
+        </ng-template>
+        <form [formGroup]="form" class="user-form">
+          <div class="grid-layout">
+            <!-- LEFT COLUMN: Avatar -->
+            <div class="left-col">
+              <div class="avatar-wrapper">
+                <img *ngIf="avatarPreview" [src]="avatarPreview" alt="Avatar" class="avatar" />
+                <button mat-stroked-button color="primary" class="upload-btn">
+                  <input type="file" (change)="onAvatarSelected($event)" accept="image/*" />
+                  Change Avatar
+                </button>
+              </div>
+            </div>
 
-            <button mat-stroked-button color="primary" class="upload-btn">
-              <input type="file" (change)="onAvatarSelected($event)" accept="image/*" />
-              Change Avatar
-            </button>
+            <!-- RIGHT COLUMN: User Fields -->
+            <div class="right-col">
+              <div class="form-grid">
+                <!-- ROW 1 -->
+                <mat-form-field appearance="fill">
+                  <mat-label>Username</mat-label>
+                  <input matInput formControlName="username" />
+                  <mat-error *ngIf="form.get('username')?.hasError('required')">
+                    Username is required.
+                  </mat-error>
+                  <mat-error *ngIf="form.get('username')?.hasError('usernameTaken')">
+                    Username is already taken.
+                  </mat-error>
+
+                  <!-- Status Icons -->
+                  <mat-icon *ngIf="form.get('username')?.pending">hourglass_empty</mat-icon>
+                  <mat-icon
+                    matSuffix
+                    *ngIf="
+                      form.get('username')?.valid &&
+                      !form.get('username')?.pending &&
+                      !this.isEditMode
+                    "
+                  >
+                    check_circle
+                  </mat-icon>
+                </mat-form-field>
+
+                <mat-form-field appearance="fill">
+                  <mat-label>Email Address</mat-label>
+                  <input matInput formControlName="email_address" />
+                  <mat-error *ngIf="form.get('email_address')?.hasError('required')">
+                    Email is required.
+                  </mat-error>
+                  <mat-error *ngIf="form.get('email_address')?.hasError('email')">
+                    Please enter a valid email address.
+                  </mat-error>
+                </mat-form-field>
+
+                <!-- ROW 2 -->
+                <mat-form-field appearance="fill">
+                  <mat-label>First Name</mat-label>
+                  <input matInput formControlName="first_name" />
+                  <mat-error *ngIf="form.get('first_name')?.hasError('required')">
+                    First name is required.
+                  </mat-error>
+                </mat-form-field>
+
+                <mat-form-field appearance="fill">
+                  <mat-label>Last Name</mat-label>
+                  <input matInput formControlName="last_name" />
+                  <mat-error *ngIf="form.get('last_name')?.hasError('required')">
+                    Last name is required.
+                  </mat-error>
+                </mat-form-field>
+
+                <!-- ROW 3 -->
+                <mat-form-field appearance="fill">
+                  <mat-label>Title</mat-label>
+                  <input matInput formControlName="title" />
+                </mat-form-field>
+
+                <mat-form-field appearance="fill">
+                  <mat-label>Security Level</mat-label>
+                  <mat-select formControlName="security_level">
+                    <mat-option value="agent">Agent</mat-option>
+                    <mat-option value="admin">Admin</mat-option>
+                    <mat-option value="supervisor">Supervisor</mat-option>
+                  </mat-select>
+                  <mat-error *ngIf="form.get('security_level')?.hasError('required')">
+                    Security level is required.
+                  </mat-error>
+                </mat-form-field>
+              </div>
+
+              <div class="checkbox-row">
+                <mat-checkbox formControlName="active">Active</mat-checkbox>
+                <mat-checkbox formControlName="sip_enabled">SIP Enabled</mat-checkbox>
+              </div>
+            </div>
           </div>
+        </form>
+      </mat-tab>
+
+      <!-- TAB 2: SIP SETTINGS -->
+      <mat-tab>
+        <ng-template mat-tab-label>
+          <mat-icon>call</mat-icon>
+          <span>SIP Settings</span>
+        </ng-template>
+        <div class="sip-settings-tab">
+          <ng-container *ngIf="form.value.sip_enabled; else disabledSIP">
+            <div class="sip-section">
+              <h3>SIP Configuration</h3>
+              <mat-divider></mat-divider>
+
+              <div *ngIf="form.value.sipData" class="sip-grid">
+                <div class="sip-field">
+                  <p><strong>Extension:</strong></p>
+                  <p>{{ form.value.sipData.extension }}</p>
+                </div>
+
+                <div class="sip-field">
+                  <p><strong>SIP Server:</strong></p>
+                  <p>{{ form.value.sipData.sip_server }}</p>
+                </div>
+
+                <!-- Optional: Uncomment if you want to display password -->
+                <!--
+                <div class="sip-field">
+                  <p><strong>Password:</strong></p>
+                  <p>{{ form.value.sipData.sip_password }}</p>
+                </div>
+                -->
+              </div>
+            </div>
+          </ng-container>
+
+          <ng-template #disabledSIP>
+            <p class="disabled-sip-msg">
+              SIP is currently disabled for this user. Enable it in the “User Info” tab.
+            </p>
+          </ng-template>
         </div>
+      </mat-tab>
 
-        <!-- RIGHT COLUMN: User Fields -->
-        <div class="right-col">
-          <div class="form-grid">
-            <!-- ROW 1 -->
-            <mat-form-field appearance="fill">
-              <mat-label>Username</mat-label>
-              <input matInput formControlName="username" />
-              <mat-error *ngIf="form.get('username')?.hasError('required')">
-                Username is required.
-              </mat-error>
-              <mat-error *ngIf="form.get('username')?.hasError('usernameTaken')">
-                Username is already taken
-              </mat-error>
-              <!-- Loading indicator while async validator is running -->
-              <mat-icon *ngIf="form.get('username')?.pending">hourglass_empty</mat-icon>
+      <!-- TAB 3: SKILLS -->
+      <mat-tab>
+        <ng-template mat-tab-label>
+          <mat-icon>extension</mat-icon>
+          <span>Skills</span>
+        </ng-template>
+        <div class="skills-section">
+          <h3>Group Skills</h3>
 
-              <!-- Checkmark when available -->
-              <mat-icon  matSuffix *ngIf="form.get('username')?.valid && !form.get('username')?.pending && !this.isEditMode">
-                check_circle
-              </mat-icon>
-            </mat-form-field>
+          <div class="skills-grid">
+            <!-- AVAILABLE SKILLS -->
+            <div class="skills-column">
+              <h4>Available</h4>
+              <mat-selection-list
+                #availableList
+                [multiple]="true"
+                [(ngModel)]="selectedAvailable"
+                [compareWith]="compareStrings"
+              >
+                <mat-list-option *ngFor="let skill of availableSkills" [value]="skill">
+                  {{ skill }}
+                </mat-list-option>
+              </mat-selection-list>
+            </div>
 
-            <mat-form-field appearance="fill">
-              <mat-label>Email Address</mat-label>
-              <input matInput formControlName="email_address" />
-              <mat-error *ngIf="form.get('email_address')?.hasError('required')">
-                Email is required.
-              </mat-error>
-              <mat-error *ngIf="form.get('email_address')?.hasError('email')">
-                Please enter a valid email address.
-              </mat-error>
-            </mat-form-field>
+            <!-- CONTROL BUTTONS -->
+            <div class="skills-buttons">
+              <button
+                mat-stroked-button
+                color="primary"
+                (click)="addSelectedSkills()"
+                [disabled]="!selectedAvailable?.length"
+              >
+                <mat-icon>arrow_forward</mat-icon>
+              </button>
 
-            <!-- ROW 2 -->
-            <mat-form-field appearance="fill">
-              <mat-label>First Name</mat-label>
-              <input matInput formControlName="first_name" />
-              <mat-error *ngIf="form.get('first_name')?.hasError('required')">
-                First name is required.
-              </mat-error>
-            </mat-form-field>
+              <button
+                mat-stroked-button
+                color="warn"
+                (click)="removeSelectedSkills()"
+                [disabled]="!selectedAssigned?.length"
+              >
+                <mat-icon>arrow_back</mat-icon>
+              </button>
+            </div>
 
-            <mat-form-field appearance="fill">
-              <mat-label>Last Name</mat-label>
-              <input matInput formControlName="last_name" />
-              <mat-error *ngIf="form.get('last_name')?.hasError('required')">
-                Last name is required.
-              </mat-error>
-            </mat-form-field>
-
-            <!-- ROW 3 -->
-            <mat-form-field appearance="fill">
-              <mat-label>Title</mat-label>
-              <input matInput formControlName="title" />
-            </mat-form-field>
-
-            <mat-form-field appearance="fill">
-              <mat-label>Security Level</mat-label>
-              <mat-select formControlName="security_level">
-                <mat-option value="user">User</mat-option>
-                <mat-option value="admin">Admin</mat-option>
-                <mat-option value="supervisor">Supervisor</mat-option>
-              </mat-select>
-              <mat-error *ngIf="form.get('security_level')?.hasError('required')">
-                Security level is required.
-              </mat-error>
-            </mat-form-field>
-          </div>
-
-          <div class="checkbox-row">
-            <mat-checkbox formControlName="active">Active</mat-checkbox>
-            <mat-checkbox formControlName="sip_enabled">SIP Enabled</mat-checkbox>
-          </div>
-
-          <!-- SIP INFO SECTION -->
-          <mat-divider class="sip-divider" *ngIf="form.value.sip_enabled"></mat-divider>
-
-          <div *ngIf="form.value.sip_enabled && form.value.sipData" class="sip-section">
-            <div class="sip-grid">
-              <div class="sip-field">
-                <p><strong>Extension:</strong></p>
-                <p>{{ form.value.sipData.extension }}</p>
-              </div>
-              <div class="sip-field">
-                <p><strong>SIP Server:</strong></p>
-                <p>{{ form.value.sipData.sip_server }}</p>
-              </div>
-              <!-- Optional: Uncomment if you want to display password -->
-              <!--
-    <div class="sip-field">
-      <p><strong>Password:</strong></p>
-      <p>{{ form.value.sipData.sip_password }}</p>
-    </div>
-    -->
+            <!-- ASSIGNED SKILLS -->
+            <div class="skills-column">
+              <h4>Assigned</h4>
+              <mat-selection-list
+                #assignedList
+                [multiple]="true"
+                [(ngModel)]="selectedAssigned"
+                [compareWith]="compareStrings"
+              >
+                <mat-list-option *ngFor="let skill of assignedSkills" [value]="skill">
+                  {{ skill }}
+                </mat-list-option>
+              </mat-selection-list>
             </div>
           </div>
         </div>
-      </div>
-    </form>
+      </mat-tab>
+    </mat-tab-group>
   </mat-card>
 </mat-dialog-content>
 
 <mat-dialog-actions align="end">
   <button mat-button (click)="close()">Cancel</button>
-  <button mat-raised-button color="primary" 
-                            (click)="save()"
-                            [disabled]="form.invalid || form.get('username')?.pending">
-                            Save
+  <button
+    mat-raised-button
+    color="primary"
+    (click)="save()"
+    [disabled]="form.invalid || form.get('username')?.pending"
+  >
+    Save
   </button>
 </mat-dialog-actions>

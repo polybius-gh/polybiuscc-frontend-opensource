@@ -9,8 +9,21 @@
 
     <div class="right-icons">
       <!-- Phone Controls Dropdown -->
-      <button mat-icon-button [matMenuTriggerFor]="phoneMenu" aria-label="Open phone controls">
-        <mat-icon>{{ getPhoneIconName() }}</mat-icon>
+         <button
+        mat-icon-button
+        [matMenuTriggerFor]="phoneMenu"
+        aria-label="Open phone controls"
+      >
+        <mat-icon
+          [ngClass]="{
+            'text-warning blink': isRinging,
+            'text-success': phoneStatus === 'registered' && !isRinging,
+            'text-secondary': phoneStatus === 'idle' && !isRinging,
+            'text-danger': phoneStatus === 'disconnected' || phoneStatus === 'registrationFailed'
+          }"
+        >
+          {{ getPhoneIconName() }}
+        </mat-icon>
       </button>
 
       <mat-menu #phoneMenu="matMenu" xPosition="before" yPosition="below">

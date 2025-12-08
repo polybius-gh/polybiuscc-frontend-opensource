@@ -12,8 +12,6 @@ export class UserSessionService {
   private _userSession: BehaviorSubject<UserSession | null> =
     new BehaviorSubject<UserSession | null>(null);
 
-  //private _userSession = new BehaviorSubject<UserSession | null | undefined>(undefined);
-
   baseURL: string = '/api/users';
 
   constructor(private _httpClient: HttpClient) {}
